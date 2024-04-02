@@ -8,6 +8,12 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = ["aarch64-darwin" "x86_64-linux"];
       
+      flake = {
+        flakeModule = {
+          imports = [./flake-module.nix];
+        };
+      };
+
       imports = [
         inputs.flake-parts.flakeModules.easyOverlay
         ./flake-module.nix

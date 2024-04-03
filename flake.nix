@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    pre-commit-nix.url = "github:cachix/pre-commit-hooks.nix";
   };
 
   outputs = {
@@ -42,9 +43,18 @@
         devShells.default = pkgs.mkShell {
           name = "neovim.nix";
           packages = [
+          ${config.pre-commit.installationScript}
             config.neovim.result
           ];
         };
+
+        pre-commit = {
+          settings = {
+      hooks.alejandra.enable = true;
+            # hooks.stylua.enable = true;
+          };
+        };
+
       };
     };
 }

@@ -4,10 +4,14 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = { flake-parts, self, ... } @ inputs:
-    flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = {
+    flake-parts,
+    self,
+    ...
+  } @ inputs:
+    flake-parts.lib.mkFlake {inherit inputs;} {
       systems = ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
-      
+
       flake = {
         flakeModule = {
           imports = [./flake-module.nix];
@@ -19,8 +23,11 @@
         ./flake-module.nix
       ];
 
-      perSystem = { config, pkgs, ... }: {
-
+      perSystem = {
+        config,
+        pkgs,
+        ...
+      }: {
         packages = {
           default = config.packages.result;
           result = config.neovim.result;
@@ -30,13 +37,14 @@
           inherit (config.packages) default;
         };
 
+        formatter = pkgs.alejandra;
+
         devShells.default = pkgs.mkShell {
           name = "neovim.nix";
           packages = [
             config.neovim.result
           ];
         };
-
       };
-};
+    };
 }

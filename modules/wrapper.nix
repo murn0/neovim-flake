@@ -1,11 +1,13 @@
-{lib, flake-parts-lib, ...}:
+{
+  lib,
+  flake-parts-lib,
+  ...
+}:
 with lib; let
   inherit (builtins) path isPath;
   inherit (flake-parts-lib) mkPerSystemOption;
-in
-{
+in {
   options = {
-  
     perSystem = mkPerSystemOption ({
       config,
       pkgs,
@@ -31,21 +33,24 @@ in
             default = let
               configDir = pkgs.symlinkJoin {
                 name = "neovim-config-dir";
-                paths = (path {
+                paths = path {
                   name = "neovim-config-dir-src";
                   path = cfg.configPath;
                   filter = path: type: type == "directory" || hasSuffix ".lua" path;
-                });
+                };
               };
             in
               optionals (cfg.env != {}) (
                 flatten
-                  (mapAttrsToList
-                    (name: value: [ "--set" "${name}" "${value}" ])
-                    cfg.env)
+                (mapAttrsToList
+                  (name: value: ["--set" "${name}" "${value}"])
+                  cfg.env)
               )
               ++ optionals (cfg.dependencies != []) [
-                "--prefix" "PATH" ":" "${makeBinPath cfg.dependencies}"
+                "--prefix"
+                "PATH"
+                ":"
+                "${makeBinPath cfg.dependencies}"
               ]
               ++ optionals (isPath cfg.configPath) [
                 "--add-flags"

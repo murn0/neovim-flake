@@ -1,11 +1,12 @@
-{lib, flake-parts-lib, ...}:
-let
+{
+  lib,
+  flake-parts-lib,
+  ...
+}: let
   inherit (lib) mkOption types;
   inherit (flake-parts-lib) mkPerSystemOption;
-in
-{
+in {
   options = {
-  
     perSystem = mkPerSystemOption ({
       config,
       pkgs,

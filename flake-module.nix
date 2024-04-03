@@ -1,8 +1,11 @@
-{lib, flake-parts-lib, ...}:
+{
+  lib,
+  flake-parts-lib,
+  ...
+}:
 with lib; let
   inherit (flake-parts-lib) mkPerSystemOption;
 in {
-
   imports = [
     ./modules/initLua.nix
     ./modules/wrapper.nix
@@ -28,7 +31,7 @@ in {
 
           dependencies = mkOption {
             type = listOf package;
-            default = [ ];
+            default = [];
             description = "Additional binaries to bake into the final Neovim derivation's PATH";
           };
 
@@ -53,9 +56,10 @@ in {
 
       config = {
         neovim = {
-          result = pkgs.wrapNeovimUnstable cfg.package (cfg.wrapperConfig // {
-            wrapperArgs = cfg.wrapperConfig.wrapperArgs ++ cfg.extraWrapperArgs;
-          });
+          result = pkgs.wrapNeovimUnstable cfg.package (cfg.wrapperConfig
+            // {
+              wrapperArgs = cfg.wrapperConfig.wrapperArgs ++ cfg.extraWrapperArgs;
+            });
         };
       };
     });

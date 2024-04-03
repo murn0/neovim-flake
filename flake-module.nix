@@ -33,14 +33,14 @@ in {
           };
 
           configPath = mkOption {
-            type = path;
-            default = ./.;
+            type = nullOr path;
+            default = null;
           };
 
           initLua = {
             src = mkOption {
-              type = path;
-              default = ./init.lua;
+              type = nullOr path;
+              default = null;
             };
           };
 

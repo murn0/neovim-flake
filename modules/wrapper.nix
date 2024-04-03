@@ -1,5 +1,6 @@
 {lib, flake-parts-lib, ...}:
 with lib; let
+  inherit (builtins) path isPath;
   inherit (flake-parts-lib) mkPerSystemOption;
 in
 {
@@ -30,7 +31,7 @@ in
             default = let
               configDir = pkgs.symlinkJoin {
                 name = "neovim-config-dir";
-                paths = (builtins.path {
+                paths = (path {
                   name = "neovim-config-dir-src";
                   path = cfg.configPath;
                   filter = path: type: type == "directory" || hasSuffix ".lua" path;
@@ -46,9 +47,11 @@ in
               ++ optionals (cfg.dependencies != []) [
                 "--prefix" "PATH" ":" "${makeBinPath cfg.dependencies}"
               ]
-              ++ [
+              ++ optionals (isPath cfg.configPath) [
                 "--add-flags"
                 ''--cmd "set runtimepath^=${configDir}"''
+              ]
+              ++ optionals (isPath cfg.initLua.src) [
                 "--add-flags"
                 ''-u ${cfg.initLua.result}''
               ];

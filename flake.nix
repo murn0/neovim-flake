@@ -20,6 +20,7 @@
       };
 
       imports = [
+        inputs.pre-commit-nix.flakeModule
         inputs.flake-parts.flakeModules.easyOverlay
         ./flake-module.nix
       ];
@@ -43,18 +44,19 @@
         devShells.default = pkgs.mkShell {
           name = "neovim.nix";
           packages = [
-          ${config.pre-commit.installationScript}
             config.neovim.result
           ];
+          shellHook = ''
+            ${config.pre-commit.installationScript}
+          '';
         };
 
         pre-commit = {
           settings = {
-      hooks.alejandra.enable = true;
-            # hooks.stylua.enable = true;
+            hooks.alejandra.enable = true;
+            hooks.stylua.enable = true;
           };
         };
-
       };
     };
 }

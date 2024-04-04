@@ -39,6 +39,15 @@
           inherit (config.packages) default;
         };
 
+        apps = {
+          examples.basic = pkgs.writeShellApplication {
+            name = "example-basic";
+            text = ''
+              nix run ./examples/basic#default
+            '';
+          };
+        };
+
         formatter = pkgs.alejandra;
 
         devShells.default = pkgs.mkShell {

@@ -39,26 +39,13 @@
           inherit (config.packages) default;
         };
 
-        apps = {
-          basic.program = pkgs.writeShellApplication {
-            name = "example-basic";
-            text = ''
-              nix run ./example#default
-            '';
-          };
-
-          check-local.program = pkgs.writeShellApplication {
-            name = "check-local";
-            text = ''
-              nix run --override-input neovim-flake path:./. ./example#default
-            '';
-          };
-        };
-
         formatter = pkgs.alejandra;
 
         devShells.default = pkgs.mkShell {
           name = "neovim.nix";
+          nativeBuildInputs = with pkgs; [
+            just
+          ];
           packages = [
             config.neovim.result
           ];

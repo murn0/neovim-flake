@@ -22,7 +22,7 @@
         ...
       }: {
         neovim = {
-          package = inputs'.neovim-nightly.packages.neovim;
+          # package = inputs'.neovim-nightly.packages.neovim;
           configPath = ./.;
           initLua.src = ./init.lua;
         };

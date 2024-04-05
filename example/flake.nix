@@ -5,6 +5,8 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-parts.url = "github:hercules-ci/flake-parts";
     neovim-flake.url = "github:murn0/neovim-flake";
+
+    neovim-nightly.url = "github:neovim/neovim?dir=contrib";
   };
 
   outputs = {flake-parts, ...} @ inputs:
@@ -16,10 +18,12 @@
       systems = ["aarch64-darwin" "aarch64-linux" "x86_64-linux"];
       perSystem = {
         config,
+        # inputs',
         pkgs,
         ...
       }: {
         neovim = {
+          # package = inputs'.neovim-nightly.packages.neovim;
           configPath = ./.;
           initLua.src = ./init.lua;
         };

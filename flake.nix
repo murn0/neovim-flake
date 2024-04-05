@@ -40,10 +40,17 @@
         };
 
         apps = {
-          examples.basic = pkgs.writeShellApplication {
+          basic.program = pkgs.writeShellApplication {
             name = "example-basic";
             text = ''
-              nix run ./examples/basic#default
+              nix run ./example#default
+            '';
+          };
+
+          check-local.program = pkgs.writeShellApplication {
+            name = "check-local";
+            text = ''
+              nix run --override-input neovim-flake path:./. ./example#default
             '';
           };
         };

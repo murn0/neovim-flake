@@ -43,6 +43,9 @@
 
         devShells.default = pkgs.mkShell {
           name = "neovim.nix";
+          nativeBuildInputs = with pkgs; [
+            just
+          ];
           packages = [
             config.neovim.result
           ];

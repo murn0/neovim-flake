@@ -9,6 +9,7 @@ in {
   imports = [
     ./modules/initLua.nix
     ./modules/wrapper.nix
+    ./modules/plugins
   ];
 
   options = {

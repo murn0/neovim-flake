@@ -78,32 +78,45 @@ in {
       options = with types; {
         neovim = {
           lazy = {
-            package = mkOption {
-              type = package;
-              default = pkgs.vimPlugins.lazy-nvim;
+            package = mkPackageOption pkgs.vimPlugins "lazy.nvim" {
+              default = "lazy-nvim";
+              pkgsText = "pkgs.vimPlugins";
             };
-            settings = mkOption {
-              type = submodule {
-                freeformType = attrsOf anything;
-                options = {
-                  dev = {
-                    path = mkOption {
-                      type = nullOr (oneOf [path str]);
-                      default = null;
-                    };
-                  };
-                  install = {
-                    missing = mkOption {
-                      type = bool;
-                      default = false;
-                    };
-                  };
-                };
-              };
-            };
+            # package = mkOption {
+            #   type = package;
+            #   default = pkgs.vimPlugins.lazy-nvim;
+            # };
+            # settings = mkOption {
+            #   type = submodule {
+            #     freeformType = attrsOf anything;
+            #     options = {
+            #       dev = {
+            #         path = mkOption {
+            #           type = nullOr (oneOf [path str]);
+            #           default = null;
+            #         };
+            #       };
+            #       install = {
+            #         missing = mkOption {
+            #           type = bool;
+            #           default = false;
+            #         };
+            #       };
+            #     };
+            #   };
+            # };
             plugins = mkOption {
               type = attrsOf (submodule pluginSpec);
               default = {};
+              default = {
+                nvim-treesitter = {
+                  package = pkgs.symlinkJoin {
+                    name = "nvim-treesitter";
+                    paths = [pkgs.vimPlugins.nvim-treesitter] ++ pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
+                  };
+                  config = ./treesitter.lua;
+                };
+              };
             };
           };
 
@@ -146,13 +159,27 @@ in {
             lazy = let
               toPlugin' = name: attrs: let
                 package = mkPlugin name attrs;
-              in {
-                inherit name;
-                dir = "${package}";
-              };
+              in
+                {
+                  inherit name;
+                  dir = "${package}";
+                }
+                // optionalAttrs (isBool attrs.config) {
+                  inherit (attrs) config;
+                }
+                // optionalAttrs (isString attrs.config) {
+                  config = lib.generators.mkLuaInline attrs.config;
+                }
+                // optionalAttrs (isDerivation attrs.config || isPath attrs.config) {
+                  config = lib.generators.mkLuaInline ''dofile "${attrs.config}"'';
+                }
+                // optionalAttrs (isAttrs attrs.config) {
+                  config = true;
+                  opts = attrs.config;
+                };
 
               spec = lib.generators.toLua {} (mapAttrsToList toPlugin' cfg.plugins);
-              opts = lib.generators.toLua {} ({performance.rtp.reset = false;} // cfg.settings);
+              opts = lib.generators.toLua {} {performance.rtp.reset = false;};
             in {
               inherit spec opts;
             };

@@ -28,7 +28,7 @@ in {
         };
       };
 
-      config = mkIf (cfg.plugins != []) {
+      config = {
         neovim = {
           lazy = {
             result = let
@@ -62,7 +62,7 @@ in {
                       buildVimPlugin {
                         inherit name;
                         inherit (attrs) src;
-                        leaveDotGit = true; # So some lazy features (commands) work properly
+                        leaveDotGit = true;
                       };
                 }
                 // optionalAttrs (attrs.dependencies != {}) {

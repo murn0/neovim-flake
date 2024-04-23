@@ -17,8 +17,7 @@ in {
       options = with types; {
         neovim.lazy.settings = mkOption {
           type = attrs;
-          default = {
-          };
+          default = {};
         };
       };
     });

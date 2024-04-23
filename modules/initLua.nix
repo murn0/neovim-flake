@@ -3,7 +3,7 @@
   flake-parts-lib,
   ...
 }: let
-  inherit (lib) mkOption types;
+  inherit (lib) mkOption types concatStringsSep optional;
   inherit (flake-parts-lib) mkPerSystemOption;
 in {
   options = {
@@ -34,18 +34,26 @@ in {
               type = package;
               default = pkgs.writeTextFile {
                 name = "init.lua";
-                text = ''
-                  -- preConfig
-                  ${cfg.initLua.preConfig}
-
-                  -- Load ${cfg.initLua.src}
-                  ${builtins.readFile "${cfg.initLua.src}"}
-
-                  vim.cmd.source "${cfg.lazy.result}"
-
-                  -- postConfig
-                  ${cfg.initLua.postConfig}
-                '';
+                text = concatStringsSep "\n" (
+                  optional (cfg.initLua.preConfig != "") ''
+                    -- preConfig
+                    ${cfg.initLua.preConfig}
+                  ''
+                  ++ [
+                    ''
+                      -- Load ${cfg.initLua.src}
+                      ${builtins.readFile "${cfg.initLua.src}"}
+                    ''
+                  ]
+                  ++ optional (cfg.lazy.plugins != {}) ''
+                    -- Load plugins setting
+                    vim.cmd.source "${cfg.lazy.result}"
+                  ''
+                  ++ optional (cfg.initLua.preConfig != "") ''
+                    -- postConfig
+                    ${cfg.initLua.postConfig}
+                  ''
+                );
               };
             };
           };

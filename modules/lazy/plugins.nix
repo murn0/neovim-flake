@@ -83,24 +83,6 @@ in {
         neovim.lazy.plugins = mkOption {
           type = attrsOf (submodule pluginSpec);
           default = {
-            nvim-treesitter = {
-              runtimeDeps = [pkgs.ripgrep];
-              package = pkgs.symlinkJoin {
-                name = "nvim-treesitter";
-                paths = [pkgs.vimPlugins.nvim-treesitter] ++ pkgs.vimPlugins.nvim-treesitter.withAllGrammars.dependencies;
-              };
-              config = ../plugins/treesitter.lua;
-              event = ["BufReadPost"];
-              dependencies = {
-                nvim-treesitter-textobjects = {
-                  package = pkgs.vimPlugins.nvim-treesitter-textobjects;
-                  runtimeDeps = [
-                    pkgs.jq
-                    pkgs.git
-                  ];
-                };
-              };
-            };
           };
         };
       };

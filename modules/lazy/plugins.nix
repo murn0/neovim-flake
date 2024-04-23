@@ -82,8 +82,7 @@ in {
       options = with types; {
         neovim.lazy.plugins = mkOption {
           type = attrsOf (submodule pluginSpec);
-          default = {
-          };
+          default = {};
         };
       };
     });

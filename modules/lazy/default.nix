@@ -28,7 +28,7 @@ in {
         };
       };
 
-      config = {
+      config = mkIf (cfg.plugins != []) {
         neovim = {
           lazy = {
             result = let

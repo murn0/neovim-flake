@@ -41,6 +41,8 @@ in {
                   -- Load ${cfg.initLua.src}
                   ${builtins.readFile "${cfg.initLua.src}"}
 
+                  vim.cmd.source "${cfg.lazy.result}"
+
                   -- postConfig
                   ${cfg.initLua.postConfig}
                 '';

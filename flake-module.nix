@@ -9,6 +9,10 @@ in {
   imports = [
     ./modules/initLua.nix
     ./modules/wrapper.nix
+    # ./modules/plugins
+    ./modules/lazy
+    ./modules/lazy/settings.nix
+    ./modules/lazy/plugins.nix
   ];
 
   options = {

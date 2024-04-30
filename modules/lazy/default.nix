@@ -81,7 +81,7 @@ in {
                   config = generators.mkLuaInline ''dofile "${attrs.config}"'';
                 }
                 // optionalAttrs (isString attrs.config) {
-                  config = attrs.config;
+                  config = generators.mkLuaInline attrs.config;
                 }
                 // optionalAttrs (isAttrs attrs.config) {
                   config = true;

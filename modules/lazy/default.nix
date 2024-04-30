@@ -77,11 +77,11 @@ in {
                 // optionalAttrs (isBool attrs.config) {
                   inherit (attrs) config;
                 }
-                // optionalAttrs (isString attrs.config) {
-                  config = lib.generators.mkLuaInline attrs.config;
-                }
                 // optionalAttrs (isDerivation attrs.config || isPath attrs.config) {
                   config = lib.generators.mkLuaInline ''dofile "${attrs.config}"'';
+                }
+                // optionalAttrs (isString attrs.config) {
+                  config = lib.generators.mkLuaInline attrs.config;
                 }
                 // optionalAttrs (isAttrs attrs.config) {
                   config = true;

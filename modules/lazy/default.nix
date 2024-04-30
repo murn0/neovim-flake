@@ -72,16 +72,16 @@ in {
                     attrValues deps;
                 }
                 // optionalAttrs (isDerivation attrs.init || isPath attrs.init) {
-                  init = lib.generators.mkLuaInline ''dofile "${attrs.init}"'';
+                  init = generators.mkLuaInline ''dofile "${attrs.init}"'';
                 }
                 // optionalAttrs (isBool attrs.config) {
                   inherit (attrs) config;
                 }
                 // optionalAttrs (isDerivation attrs.config || isPath attrs.config) {
-                  config = lib.generators.mkLuaInline ''dofile "${attrs.config}"'';
+                  config = generators.mkLuaInline ''dofile "${attrs.config}"'';
                 }
                 // optionalAttrs (isString attrs.config) {
-                  config = lib.generators.mkLuaInline attrs.config;
+                  config = attrs.config;
                 }
                 // optionalAttrs (isAttrs attrs.config) {
                   config = true;

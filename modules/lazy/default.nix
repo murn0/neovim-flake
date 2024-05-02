@@ -59,7 +59,7 @@ in {
                     if attrs.package != null
                     then attrs.package
                     else
-                      buildVimPlugin {
+                      pkgs.vimUtils.buildVimPlugin {
                         inherit name;
                         inherit (attrs) src;
                         leaveDotGit = true;

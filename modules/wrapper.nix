@@ -33,11 +33,13 @@ in {
             default = let
               configDir = pkgs.symlinkJoin {
                 name = "neovim-config-dir";
-                paths = path {
-                  name = "neovim-config-dir-src";
-                  path = cfg.configPath;
-                  filter = path: type: type == "directory" || hasSuffix ".lua" path;
-                };
+                paths = [
+                  (path {
+                    name = "neovim-config-dir-src";
+                    path = cfg.configPath;
+                    filter = path: type: type == "directory" || hasSuffix ".lua" path;
+                  })
+                ];
               };
             in
               optionals (cfg.env != {}) (
